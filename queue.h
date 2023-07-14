@@ -1,93 +1,69 @@
 #include "node.h"
-#include <stdexcept>
-
-using namespace std;
 
 class Queue {
-  NodePtr headPtr, tailPtr;
-  int size;
+	private:
+		Node * head = NULL;
+		Node * tail = NULL;
+		int size = 0;
 
-public:
-  void enqueue(Customer);
-  int getSize();
-  int isEmpty();
-  int getCurrentQueue();
-  Customer dequeue();
-  Queue();
-  ~Queue(); // dequeue all
+	public:
+		Queue();
+		int getHead();
+		void enqueue(int);
+		int dequeue();
+		void printAll();
+		~Queue();
+		int getSize();
 };
 
-int Queue::getCurrentQueue(){
-  return headPtr->get_value().get_queue();
-}
-int Queue::getSize(){
-  return size;
-}
-int Queue::isEmpty(){
-  if(size == 0){
-    return 1;
-  }
-  return -1;
-}
 
 Queue::Queue() {
-  size = 0;
-  headPtr = nullptr;
-  tailPtr = nullptr;
+	this->head = NULL;
+	this->tail = NULL;
+	this->size = 0;
+}
+
+int Queue::getHead() {
+	return this->head->getValue();
+}
+
+void Queue::enqueue(int value) {
+	this->size++;
+	Node * newNode = new Node(value);
+	if(this->head == NULL) {
+		this->head = newNode;
+		this->tail = newNode;
+		return;
+	}
+	this->tail->setNext(newNode);
+	this->tail = this->tail->getNext();
+}
+
+int Queue::dequeue() {
+	this->size--;
+	if(this->head == NULL) return -2147483648;
+	if(this->head == this->tail) this->tail = NULL;
+	Node * temp = this->head;
+	int value = temp->getValue();
+	this->head = this->head->getNext();
+	delete temp;
+	return value;
+}
+
+void Queue::printAll() {
+	for(Node * temp = this->head; temp != NULL; temp = temp->getNext())
+		std::cout << temp->getValue() << " -> ";
+	std::cout << "X" << std::endl;
+}
+
+int Queue::getSize(){
+  return this->size;
 }
 
 Queue::~Queue() {
-  while (size > 0) {
-    dequeue();
-  }
+	for(Node * temp = this->head; this->head != NULL; temp = this->head) {
+		this->head = temp->getNext();
+		delete temp;
+		this->size--;
+	}
 }
-
-void Queue::enqueue(Customer x) {
-  // 1. Create a new node
-  NodePtr new_node = new NODE(x);
-
-  if (new_node) {
-    if (size == 0) {
-      // 2.1 Set new node as both head and tail
-      headPtr = new_node;
-      tailPtr = new_node;
-    } else {
-      // 2.2 Connect new node to the tail
-      tailPtr->set_next(new_node);
-      tailPtr = new_node;
-    }
-    
-    // 3. Increase size
-    size++;
-  } else {
-    cout << "Not enough memory" << endl;
-  }
-}
-
-Customer Queue::dequeue() {
-  if (size > 0) {
-    // 1. Save the value of the node to be deleted
-    Customer value = headPtr->get_value();
-
-    // 2. Move head to the next node
-    NodePtr temp = headPtr;
-    headPtr = headPtr->get_next();
-
-    // 3. Delete the old head
-    delete temp;
-
-    // 4. Decrease size
-    size--;
-
-    // 5. If the queue becomes empty, update tailPtr
-    if (size == 0) {
-      tailPtr = nullptr;
-    }
-
-    return value;
-  } else {
-    throw runtime_error("Queue is empty");
-  }
-}
-
-

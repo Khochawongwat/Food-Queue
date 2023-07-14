@@ -1,44 +1,30 @@
-#include "customer.h"
-
-#ifndef node_h
-#define  node_h
-
-class NODE{
-	Customer data;
-	NODE *nextPtr;
-public:
-	NODE(Customer);
-	~NODE();
-  Customer get_value();
-	void set_next(NODE *);
-	NODE* get_next();
+class Node {
+	private:
+		int value;
+		Node * next = NULL;
+	public:
+		Node(int);
+		Node * getNext();
+		void setNext(Node *);
+		int getValue();
+		~Node();
 };
-typedef NODE* NodePtr;
 
-NODE::NODE(Customer x){
-	data=x;
-	nextPtr= nullptr;
-
-}
-Customer NODE::get_value(){
-	return data;
-
+Node::Node(int value) {
+	this->value = value;
 }
 
-NODE* NODE::get_next(){
-	return nextPtr;
-
+Node * Node::getNext() {
+	return this->next;
 }
 
-void NODE::set_next(NODE *t){
-	 nextPtr=t;
-
+void Node::setNext(Node * next) {
+	this->next = next;
 }
 
-NODE::~NODE(){
-	 cout<<"Customer # " << data.get_queue() << "has checked out" << endl;
-
+int Node::getValue() {
+	return this->value;
 }
 
-
-#endif
+Node::~Node() {
+}
